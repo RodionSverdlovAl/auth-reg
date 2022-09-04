@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,13 +9,20 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <form method="post" action="vendor/signup.php">
+    <form method="post" action="vendor/signin.php">
         <label>login</label>
         <input name="login" type="text" placeholder="enter your login">
         <label>password</label>
         <input name="password" type="password" placeholder="enter your password">
-        <button>enter</button>
+        <button type="submit">enter</button>
         <a href="registration.php">registration</a>
+
+        <p class="msg">
+            <?php
+            echo $_SESSION['massage'];
+            unset($_SESSION['massage']);
+            ?>
+        </p>
     </form>
 </body>
 </html>

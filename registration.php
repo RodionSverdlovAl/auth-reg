@@ -22,7 +22,7 @@ session_start();
         <input name="password" type="password" placeholder="enter your password">
         <label>repeat password</label>
         <input name="password_confirm" type="password" placeholder="repeat password">
-        <button>registration</button>
+        <button type="submit">registration</button>
         <a href="index.php">authentication</a>
         <p class="msg">
             <?php
