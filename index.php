@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <form>
+    <form method="post" action="vendor/signup.php">
         <label>login</label>
         <input name="login" type="text" placeholder="enter your login">
         <label>password</label>
