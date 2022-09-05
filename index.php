@@ -12,20 +12,18 @@ if($_SESSION['user']){
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <form method="post" action="vendor/signin.php">
+    <form>
         <label>login</label>
         <input name="login" type="text" placeholder="enter your login">
         <label>password</label>
         <input name="password" type="password" placeholder="enter your password">
-        <button type="submit">enter</button>
+        <button type="submit" class="login-btn">enter</button>
         <a href="registration.php">registration</a>
 
-        <p class="msg">
-            <?php
-            echo $_SESSION['massage'];
-            unset($_SESSION['massage']);
-            ?>
-        </p>
+        <p class="msg"></p>
     </form>
+
+<script src = "assets/js/jquery-3.6.1.min.js"></script>
+<script src = "assets/js/main.js"></script>
 </body>
 </html>

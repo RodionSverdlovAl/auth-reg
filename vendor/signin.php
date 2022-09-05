@@ -8,7 +8,6 @@ $password = md5($_POST['password']);
 $check_user = mysqli_query($connect, "SELECT * FROM `users` WHERE `login` = '$login' AND `password` = '$password'");
 
 if(mysqli_num_rows($check_user)>0){
-    echo 'user '. $login . ' successful auth';
     $user = mysqli_fetch_assoc($check_user);
     $_SESSION['user'] = [
         'id' => $user['id'],
@@ -16,10 +15,12 @@ if(mysqli_num_rows($check_user)>0){
         'email' => $user['email'],
         'avatar' => $user['avatar'],
     ];
-    header('Location: ../profile.php');
+    //header('Location: ../profile.php');
+    echo 'авторизация прошла успешно';
 }else{
-    $_SESSION['massage'] = 'неверный логин или пароль';
-    header('Location: ../index.php');
+    //$_SESSION['massage'] = 'неверный логин или пароль';
+    //header('Location: ../index.php');
+    echo 'авторизация не прошла';
 }
 
 
