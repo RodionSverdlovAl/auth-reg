@@ -15,6 +15,9 @@ form{
     flex-direction: column;
     width: 400px;
 }
+.error{
+    border-bottom: 2px solid red;
+}
 input{
     border: unset;
     border-bottom: 1px black solid;
