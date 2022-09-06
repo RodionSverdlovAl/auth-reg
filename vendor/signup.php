@@ -43,38 +43,38 @@ if(!empty($error_fields)){
 
 
 if($password === $password_confirm){
-   print_r($_FILES);
     $path = 'uploads/' . time() . $_FILES['avatar']['name'];
-    if(!move_uploaded_file($_FILES['avatar']['tmp_name'], '../'.$path)){
+    if(!move_uploaded_file($_FILES['avatar']['tmp_name'], '../'.$path)){ // проверяем загрузку картинки (если не загружена)
         $response =[
             "status" => false,
             "massage" => 'ошибка при загрузке картинки',
-            "type" => 2,
+            "type" => 2
         ];
         echo json_encode($response);
-    }else{
-        // проверяем существует ли юзер с таким аккаунтом
+    } // если загружена
+    else{
         $check_user = mysqli_query($connect, "SELECT * FROM `users` WHERE `login` = '$login'");
-        if(mysqli_num_rows($check_user)>0){ // если юзер с таким логином уже есть то мы выводим меседж
-            $response =[
+        if(mysqli_num_rows($check_user)>0) { // если юзер с таким логином уже есть то мы выводим меседж
+            $response = [
                 "status" => false,
                 "massage" => 'юзер с таким логином уже существует',
-                "type" => 1
+                "type" => 3
             ];
             echo json_encode($response);
-        }else{ // продолжаем регистрацию
+            die();
+        }else{
+            // регаем юзера
             $password = md5($password);
             mysqli_query($connect, "INSERT INTO `users` (`id`, `full_name`, `login`, `password`, `avatar`, `email`)
-                    VALUES (NULL, '$full_name', '$login', '$password' , '$path', '$email')");
+            VALUES (NULL, '$full_name', '$login', '$password' , '$path', '$email')");
+            // когда зарегали кидаем ответ на джаваскрипт
             $response =[
                 "status" => true,
-                "massage" => 'Регистрация прошла успешно',
+                "massage" => 'Регистрация прошла успешно'
             ];
             echo json_encode($response);
         }
     }
-
-
 }else{
     $response =[
         "status" => false,
@@ -82,3 +82,4 @@ if($password === $password_confirm){
     ];
     echo json_encode($response);
 }
+
