@@ -8,27 +8,77 @@ $email = $_POST['email'];
 $password = $_POST['password'];
 $password_confirm = $_POST['password_confirm'];
 
+$error_fields = [];
+
+if($login === ''){
+    $error_fields[] = 'login';
+}
+if($password === ''){
+    $error_fields[] = 'password';
+}
+if($full_name === ''){
+    $error_fields[] = 'full_name';
+}
+if($email === '' || !filter_var($email,FILTER_VALIDATE_EMAIL)){
+    $error_fields[] = 'email';
+}
+if($password_confirm === ''){
+    $error_fields[] = 'password_confirm';
+}
+
+if(!$_FILES['avatar']){
+    $error_fields[] = 'avatar';
+}
+if(!empty($error_fields)){
+    $response =[
+        "status" => false,
+        "massage" => 'проверьте правильность полей',
+        "type" => 1,
+        "fields" => $error_fields
+    ];
+    echo json_encode($response);
+    die();
+}
+
+
+
 if($password === $password_confirm){
    print_r($_FILES);
     $path = 'uploads/' . time() . $_FILES['avatar']['name'];
     if(!move_uploaded_file($_FILES['avatar']['tmp_name'], '../'.$path)){
-        $_SESSION['massage'] = 'Не удалось загрузить фотографию';
-        header('Location: ../registration.php');
-    }
-    // проверяем существует ли юзер с таким аккаунтом
-    $check_user = mysqli_query($connect, "SELECT * FROM `users` WHERE `login` = '$login'");
-    if(mysqli_num_rows($check_user)>0){ // если юзер с таким логином уже есть то мы выводим меседж
-        $_SESSION['massage'] = 'юзер с таким логином уже существует';
-        header('Location: ../registration.php');
-    }
-    else{ // продолжаем регистрацию
-        $password = md5($password);
-        mysqli_query($connect, "INSERT INTO `users` (`id`, `full_name`, `login`, `password`, `avatar`, `email`)
-        VALUES (NULL, '$full_name', '$login', '$password' , '$path', '$email')");
-        header('Location: ../index.php');
+        $response =[
+            "status" => false,
+            "massage" => 'ошибка при загрузке картинки',
+            "type" => 2,
+        ];
+        echo json_encode($response);
+    }else{
+        // проверяем существует ли юзер с таким аккаунтом
+        $check_user = mysqli_query($connect, "SELECT * FROM `users` WHERE `login` = '$login'");
+        if(mysqli_num_rows($check_user)>0){ // если юзер с таким логином уже есть то мы выводим меседж
+            $response =[
+                "status" => false,
+                "massage" => 'юзер с таким логином уже существует',
+                "type" => 1
+            ];
+            echo json_encode($response);
+        }else{ // продолжаем регистрацию
+            $password = md5($password);
+            mysqli_query($connect, "INSERT INTO `users` (`id`, `full_name`, `login`, `password`, `avatar`, `email`)
+                    VALUES (NULL, '$full_name', '$login', '$password' , '$path', '$email')");
+            $response =[
+                "status" => true,
+                "massage" => 'Регистрация прошла успешно',
+            ];
+            echo json_encode($response);
+        }
     }
 
+
 }else{
-    $_SESSION['massage'] = 'пароли не совпадают';
-    header('Location: ../registration.php');
+    $response =[
+        "status" => false,
+        "massage" => 'пароли не совпадают',
+    ];
+    echo json_encode($response);
 }

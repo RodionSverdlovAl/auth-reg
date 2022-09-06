@@ -14,7 +14,7 @@ if($_SESSION['user']){
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <form method="post" action="vendor/signup.php" enctype="multipart/form-data">
+    <form>
         <label>full name</label>
         <input name="full_name" type="text" placeholder="enter your full name">
         <label>login</label>
@@ -27,14 +27,12 @@ if($_SESSION['user']){
         <input name="password" type="password" placeholder="enter your password">
         <label>repeat password</label>
         <input name="password_confirm" type="password" placeholder="repeat password">
-        <button type="submit">registration</button>
+        <button type="submit" class="registration-btn">registration</button>
         <a href="index.php">authentication</a>
-        <p class="msg">
-            <?php
-            echo $_SESSION['massage'];
-            unset($_SESSION['massage']);
-            ?>
-        </p>
+        <p class="msg">massage </p>
     </form>
+
+    <script src = "assets/js/jquery-3.6.1.min.js"></script>
+    <script src = "assets/js/main.js"></script>
 </body>
 </html>
