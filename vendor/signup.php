@@ -40,7 +40,28 @@ if(!empty($error_fields)){
     die();
 }
 
-
+function validatePassword(string $password):array{
+    $validate = [
+        "check" => true,
+        "massage" => ''
+    ];
+    if(strlen($password)<6){
+        $validate['check'] = false;
+        $validate['massage'] = 'Длинна пароля не может быть меньше 6 символов';
+    }
+    $check_number = false;
+    $password = str_split($password, 1);
+    foreach ($password as $char){
+        if(is_numeric($char)){
+            $check_number = true;
+        }
+    }
+    if($check_number===false){
+        $validate['check'] = false;
+        $validate['massage'] = 'в пароле должны присутствовать числа';
+    }
+    return $validate;
+}
 
 if($password === $password_confirm){
     $path = 'uploads/' . time() . $_FILES['avatar']['name'];
@@ -64,15 +85,24 @@ if($password === $password_confirm){
             die();
         }else{
             // регаем юзера
-            $password = md5($password);
-            mysqli_query($connect, "INSERT INTO `users` (`id`, `full_name`, `login`, `password`, `avatar`, `email`)
-            VALUES (NULL, '$full_name', '$login', '$password' , '$path', '$email')");
-            // когда зарегали кидаем ответ на джаваскрипт
-            $response =[
-                "status" => true,
-                "massage" => 'Регистрация прошла успешно'
-            ];
-            echo json_encode($response);
+            if(validatePassword($password)['check']){
+                $password = md5($password);
+                mysqli_query($connect, "INSERT INTO `users` (`id`, `full_name`, `login`, `password`, `avatar`, `email`)
+                VALUES (NULL, '$full_name', '$login', '$password' , '$path', '$email')");
+                // когда зарегали кидаем ответ на джаваскрипт
+                $response =[
+                    "status" => true,
+                    "massage" => 'Регистрация прошла успешно'
+                ];
+                echo json_encode($response);
+            }else{
+                $response =[
+                    "status" => false,
+                    "massage" => validatePassword($password)['massage']
+                ];
+                echo json_encode($response);
+            }
+
         }
     }
 }else{
@@ -83,3 +113,4 @@ if($password === $password_confirm){
     echo json_encode($response);
 }
 
+exit();
